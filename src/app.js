@@ -1,7 +1,9 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
+const bcrypt = require("bcryptjs");
 const logger = require("morgan");
+const helmet = require("helmet");
 const fs = require("fs");
 const swaggerUi = require("swagger-ui-express");
 const swaggerDocs = require("../swagger.json");
@@ -12,6 +14,7 @@ const directorsRoutes = require("./routes/directors.routes");
 
 //Middleware
 app.use(cors()); //Implementará CORS en el servidor
+app.use(helmet()); // Implementará Helmet en el servidor
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 app.use(
   logger("combined", {
