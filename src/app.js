@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
-const bcrypt = require("bcryptjs");
+
 const logger = require("morgan");
 const helmet = require("helmet");
 const fs = require("fs");
@@ -11,6 +11,7 @@ const swaggerDocs = require("../swagger.json");
 //Routes
 const actorsRoutes = require("./routes/actors.routes");
 const directorsRoutes = require("./routes/directors.routes");
+const usersRoutes = require("./routes/directors.routes");
 
 //Middleware
 app.use(cors()); //Implementará CORS en el servidor
@@ -27,12 +28,11 @@ app.get("/", (req, res) => res.json({ "academlo-api": "1.0.0" }));
 
 app.use("/api/v1/", actorsRoutes);
 app.use("/api/v1/", directorsRoutes);
+app.use("/api/v1/", usersRoutes);
 
 app.use((err, req, res, next) => {
   console.log(err.message);
-  res
-    .status(500)
-    .send("Ups tenemos un problema en el servidor, intentalo más tarde!");
+  res.status(500).send("Something broke!");
 });
 
 module.exports = app;
