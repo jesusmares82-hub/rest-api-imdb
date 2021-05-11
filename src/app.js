@@ -25,6 +25,7 @@ const upload = multer({ storage: storage });
 const actorsRoutes = require("./routes/actors.routes");
 const directorsRoutes = require("./routes/directors.routes");
 const usersRoutes = require("./routes/users.routes");
+const authRoutes = require("./routes/auth.routes");
 
 //Middleware
 app.use(cors()); //Implementará CORS en el servidor
@@ -43,6 +44,8 @@ app.get("/", (req, res) => res.json({ "academlo-api": "1.0.0" }));
 app.use("/api/v1/", actorsRoutes);
 app.use("/api/v1/", directorsRoutes);
 app.use("/api/v1/", usersRoutes);
+app.use("/api/v1/", authRoutes);
+
 app.post("/api/v1/gallery", upload.single("image"), (req, res) => {
   try {
     res.send(req.file);
@@ -50,6 +53,11 @@ app.post("/api/v1/gallery", upload.single("image"), (req, res) => {
     res.status(400).json({ message: error.message });
   }
 });
+
+//app.post("/api/v1/login", (req, res) => {
+//  const { email, password } = req.body;
+//  console.log(email, password);
+//});
 
 app.use((err, req, res, next) => {
   console.log(err.message);

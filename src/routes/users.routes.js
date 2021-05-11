@@ -11,8 +11,9 @@ const route = Router();
 
 //Endpoints
 route.get("/users", getAll); //READ
-route.get("/users/:id", get); //READ ID
-route.post("/users", create); //CREATE
+//route.get("/users/:id", get); //READ ID
+route.get("/users/:email", get); //READ ByEmail
+route.post("/users", create); //CREATE Registro de usuario
 route.put("/users/:id", update); //UPDATE
 route.delete("/users/:id", remove); //DELETE
 
