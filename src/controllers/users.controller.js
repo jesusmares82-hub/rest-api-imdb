@@ -22,28 +22,30 @@ const get = async (req, res, next) => {
 
 const create = async (req, res, next) => {
   try {
-    console.log(req.body);
-    //bcrypt.genSalt(10, function (err, salt) {
-    //  bcrypt.hash("B4c0//", salt, function (err, hash) {});
-    //});
-    //const user = await Users.create(req.body);
-    //res.json(user);
+    const email = req.body.email;
+    const password = req.body.password;
+    const longitud = 8;
+    const passwordHash = await bcrypt.hash(password, longitud);
+    req.body.password = passwordHash;
+    console.log(passwordHash);
+    const user = await Users.create(req.body);
+    res.json(user);
   } catch (error) {
     next(error);
   }
 };
 
-const update = async (req, res) => {
-  const longitud = 8;
-  const newPassword = randPassword(longitud);
+const update = async (req, res, next) => {
   try {
-    const hash = await bcrypt.hash(newPassword, 10);
-    const user = await User.find({ email: email });
-    if (user.length > 0) {
-      const id = req.params.id;
-      const response = await Users.update({ email: email }, { password: hash });
-      res.json(response);
-    }
+    const email = req.body.email;
+    const newPassword = req.body.password;
+    const longitud = 8;
+    const newPasswordHash = await bcrypt.hash(newPassword, longitud);
+    const id = req.params.id;
+
+    req.body.password = newPasswordHash;
+    const response = await Users.update(req.body, { where: { id } });
+    res.json(response);
   } catch (error) {
     next(error);
   }

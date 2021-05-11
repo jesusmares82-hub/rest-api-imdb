@@ -69,6 +69,35 @@
           }
         }
       }
+    },
+    "/users": {
+      "get": {
+        "description": "Obtener todos los usuarios de la base de datos",
+        "tags": ["Users"],
+        "responses": {
+          "200": {
+            "description": "Lista de usuarios"
+          }
+        }
+      },
+      "post": {
+        "description": "Crear un usuario",
+        "tags": ["Users"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Usuario"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Se ha creado un director satisfactoriamente"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -125,6 +154,35 @@
             "type": "string",
             "description": "image URL",
             "example": "https://apihandyman.io/images/commons/openapi/openapi-map.png"
+          },
+          "active": {
+            "type": "boolean"
+          }
+        }
+      },
+      "Usuario": {
+        "properties": {
+          "firstname": {
+            "type": "string",
+            "description": "El nombre del actor"
+          },
+          "lastname": {
+            "type": "string",
+            "description": "El apellido del actor"
+          },
+          "email": {
+            "type": "object",
+            "description": "Email del usuario",
+            "example": "usuario@mail.com"
+          },
+          "password": {
+            "type": "string",
+            "description": "Password del usuario"
+          },
+          "rest_token": {
+            "type": "string",
+            "description": "Resetear token del usuario",
+            "example": "NA"
           },
           "active": {
             "type": "boolean"
