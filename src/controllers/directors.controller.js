@@ -1,4 +1,5 @@
 const { Directors } = require("../models");
+const jwt = require("jsonwebtoken");
 
 const getAll = async (req, res, next) => {
   try {
@@ -38,9 +39,30 @@ const remove = async (req, res) => {
   }
 };
 
+const verifyToken = (req, res, next) => {
+  const token = req.headers["access-token"];
+  console.log(token);
+  if (token) {
+    jwt.verify(token, process.env.JWT_KEY, (err, decoded) => {
+      if (err) {
+        console.log(err);
+        return res.json({ mensaje: "Token inválido" });
+      } else {
+        req.decoded = decoded;
+        next();
+      }
+    });
+  } else {
+    res.send({
+      mensaje: "Token no proporcionado.",
+    });
+  }
+};
+
 module.exports = {
   getAll,
   create,
   update,
   remove,
+  verifyToken,
 };

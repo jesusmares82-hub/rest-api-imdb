@@ -20,7 +20,7 @@ const login = async (req, res, next) => {
       res.json({ token });
     }
   } catch (error) {
-    res.status(500).json({ message: "Hubo un problema en el servidor" });
+    res.status(500).json({ message: "Ops! There was a problem on the server" });
   }
 };
 

@@ -4,14 +4,15 @@ const {
   create,
   update,
   remove,
+  verifyToken,
 } = require("../controllers/actors.controller");
 
 const route = Router();
 
 //Endpoints
-route.get("/actors", getAll); //READ
-route.post("/actors", create); //CREATE
-route.put("/actors/:id", update); //UPDATE
-route.delete("/actors/:id", remove); //DELETE
+route.get("/actors", verifyToken, getAll); //READ
+route.post("/actors", verifyToken, create); //CREATE
+route.put("/actors/:id", verifyToken, update); //UPDATE
+route.delete("/actors/:id", verifyToken, remove); //DELETE
 
 module.exports = route;
