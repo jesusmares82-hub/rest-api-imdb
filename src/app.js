@@ -7,6 +7,8 @@ const helmet = require("helmet");
 const fs = require("fs");
 const swaggerUi = require("swagger-ui-express");
 const swaggerDocs = require("../swagger.json");
+const { emailOptions, sendEmail } = require("./helpers/nodemailer");
+require("dotenv").config();
 const multer = require("multer");
 const mimetype = require("mime-types");
 
@@ -19,7 +21,8 @@ const storage = multer.diskStorage({
     cb(null, `${file.fieldname}${Date.now()}.${ext}`);
   },
 });
-const upload = multer({ storage: storage });
+//Almacen personalizado con un tamaño limite de 1mb por archivo
+const upload = multer({ storage: storage, limits: { fileSize: 1000000 } });
 
 //Routes
 const actorsRoutes = require("./routes/actors.routes");
@@ -46,6 +49,15 @@ app.use("/api/v1/", directorsRoutes);
 app.use("/api/v1/", usersRoutes);
 app.use("/api/v1/", authRoutes);
 
+/* === Envío de correos === */
+app.post("/api/v1/reset-password", (req, res) => {
+  emailOptions.subject = "Restablecer contraseña";
+  emailOptions["template"] = "email"; //res.render('email', )
+  emailOptions["context"] = { title: "Restablecer contraseña" }; //res.render('email', {title: 'Restablecer contraseña'} );
+
+  sendEmail(emailOptions);
+});
+
 app.post("/api/v1/gallery", upload.single("image"), (req, res) => {
   try {
     res.send(req.file);
@@ -54,14 +66,13 @@ app.post("/api/v1/gallery", upload.single("image"), (req, res) => {
   }
 });
 
-//app.post("/api/v1/login", (req, res) => {
-//  const { email, password } = req.body;
-//  console.log(email, password);
-//});
-
+//MNiddleware para manejar errores
 app.use((err, req, res, next) => {
+  if (err.name === "SequelizeValidationError") {
+    return res.status(400).json({ message: error.message });
+  }
   console.log(err.message);
-  res.status(500).send("Something broke!");
+  return res.status(500).send("Something broke!");
 });
 
 module.exports = app;

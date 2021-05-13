@@ -29,6 +29,22 @@ const update = async (req, res) => {
   }
 };
 
+const updateProfilePhoto = async (req, res) => {
+  try {
+    console.log(req.params);
+    const id = req.params.id;
+    const director = await Directors.findOne({ where: { id: id } });
+    console.log(director.dataValues.profile_photo);
+    req.body.profile_photo = req.file.path;
+    console.log(req.file);
+    const response = await Directors.update(req.body, { where: { id: id } });
+    console.log(response);
+    res.send(req.file);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
 const remove = async (req, res) => {
   try {
     const id = req.params.id;
@@ -46,7 +62,7 @@ const verifyToken = (req, res, next) => {
     jwt.verify(token, process.env.JWT_KEY, (err, decoded) => {
       if (err) {
         console.log(err);
-        return res.json({ mensaje: "Token inválido" });
+        return res.json({ mensaje: "Invalid Token" });
       } else {
         req.decoded = decoded;
         next();
@@ -54,7 +70,7 @@ const verifyToken = (req, res, next) => {
     });
   } else {
     res.send({
-      mensaje: "Token no proporcionado.",
+      mensaje: "Token not provided",
     });
   }
 };
@@ -63,6 +79,7 @@ module.exports = {
   getAll,
   create,
   update,
+  updateProfilePhoto,
   remove,
   verifyToken,
 };

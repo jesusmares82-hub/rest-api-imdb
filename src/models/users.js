@@ -3,7 +3,9 @@ const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Users extends Model {
     static associate(models) {
-      // define association here
+      this.hasOne(models.Validate_Accounts, {
+        foreignKey: "user_id",
+      });
     }
   }
   Users.init(

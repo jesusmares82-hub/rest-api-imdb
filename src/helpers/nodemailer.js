@@ -1,6 +1,8 @@
 const nodemailer = require("nodemailer");
 const googleapis = require("googleapis");
-require("dotenv").config;
+const fs = require("fs");
+const hbs = require("nodemailer-express-handlebars");
+const exphbs = require("express-handlebars");
 
 const Oauth2 = googleapis.google.auth.OAuth2;
 
@@ -22,7 +24,7 @@ const createTransporter = async () => {
         user: process.env.G_USER,
         accessToken,
         clientId: process.env.G_CLIENT_ID,
-        clienteSecret: process.env.G_CLIENT_SECRET,
+        clientSecret: process.env.G_CLIENT_SECRET,
         refreshToken: process.env.G_REFRESH_TOKEN,
       },
     });
@@ -36,20 +38,25 @@ const createTransporter = async () => {
 const sendEmail = async (options) => {
   try {
     const gmailTransporter = await createTransporter();
-    await gmailTransporter.sendMail(options);
+    gmailTransporter.use(
+      "compile",
+      hbs({
+        viewEngine: exphbs(),
+        viewPath: "src/views",
+      })
+    );
+    const results = await gmailTransporter.sendMail(options);
+    console.log(results);
   } catch (error) {
     console.log(error);
   }
 };
 
 const emailOptions = {
-  subject: "Porbando el envío de correos",
-  text: "Holoa mundo! probando el envío de correos",
+  subject: "Email confirmation",
   to: "jesus_mares_t@hotmail.com",
   from: process.env.G_USER,
 };
-
-//sendEmail(emailOptions);
 
 module.exports = {
   sendEmail,

@@ -1,5 +1,5 @@
 "use strict";
-const { Model } = require("sequelize");
+const { Model, DATEONLY } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Actors extends Model {
     static associate(models) {
@@ -10,9 +10,21 @@ module.exports = (sequelize, DataTypes) => {
   }
   Actors.init(
     {
-      firstname: DataTypes.STRING,
+      firstname: {
+        type: DataTypes.STRING,
+        validate: {
+          notEmpty: true,
+          isAlpha: true,
+          len: [0, 50],
+        },
+      },
       lastname: DataTypes.STRING,
-      dob: DataTypes.DATE,
+      dob: {
+        type: DataTypes.DATEONLY,
+        validate: {
+          isDate: true,
+        },
+      },
       biography: DataTypes.TEXT,
       profile_photo: DataTypes.STRING,
       active: DataTypes.BOOLEAN,
