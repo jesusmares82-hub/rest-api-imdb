@@ -1,4 +1,4 @@
-const { Users } = require("../models");
+const { Users, Validate_Accounts } = require("../models");
 
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -24,6 +24,25 @@ const login = async (req, res, next) => {
   }
 };
 
+const verify = async (req, res, next) => {
+  console.log(req.params);
+  const hash = req.params.hash;
+  console.log(hash);
+
+  const results = await Validate_Accounts.findOne({ where: { hash: hash } });
+  console.log(results);
+  const id = results.dataValues.user_id;
+
+  const user = await Users.findOne({ where: { id: id } });
+  console.log(user.dataValues);
+
+  req.body.active = true;
+  const response = await Users.update(req.body, { where: { id: id } });
+
+  res.json("Cuenta confirmada.");
+};
+
 module.exports = {
   login,
+  verify,
 };

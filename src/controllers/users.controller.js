@@ -49,7 +49,8 @@ const create = async (req, res, next) => {
 
     const email = req.body.email;
     const userHash = await bcrypt.hash(email, longitud);
-    req.body.hash = userHash;
+    var buscar = "/";
+    req.body.hash = userHash.replace(new RegExp(buscar, "g"), "$");
 
     const validate_user = await Validate_Accounts.create(req.body);
     console.log(validate_user);
