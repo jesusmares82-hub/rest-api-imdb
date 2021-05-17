@@ -55,31 +55,10 @@ const remove = async (req, res) => {
   }
 };
 
-const verifyToken = (req, res, next) => {
-  const token = req.headers["access-token"];
-  console.log(token);
-  if (token) {
-    jwt.verify(token, process.env.JWT_KEY, (err, decoded) => {
-      if (err) {
-        console.log(err);
-        return res.json({ mensaje: "Invalid Token" });
-      } else {
-        req.decoded = decoded;
-        next();
-      }
-    });
-  } else {
-    res.send({
-      mensaje: "Token not provided",
-    });
-  }
-};
-
 module.exports = {
   getAll,
   create,
   update,
   updateProfilePhoto,
   remove,
-  verifyToken,
 };

@@ -1,3 +1,5 @@
+const { verifyToken } = require("../middlewares/auth.middlewares");
+//const { storage } = require("../helpers/multer");
 const multer = require("multer");
 const mimetype = require("mime-types");
 
@@ -10,6 +12,8 @@ const storage = multer.diskStorage({
     cb(null, `${file.fieldname}${Date.now()}.${ext}`);
   },
 });
+//const upload = multer({ storage: storage("./uploads/actors") });
+
 const upload = multer({ storage: storage });
 
 const { Router } = require("express");
@@ -19,7 +23,6 @@ const {
   update,
   updateProfilePhoto,
   remove,
-  verifyToken,
 } = require("../controllers/actors.controller");
 require;
 

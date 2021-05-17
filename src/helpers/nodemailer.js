@@ -36,6 +36,11 @@ const createTransporter = async () => {
 };
 
 const sendEmail = async (options) => {
+  const hbsOptions = {
+    viewEngine: {
+      
+    }
+  }
   try {
     const gmailTransporter = await createTransporter();
     gmailTransporter.use(
@@ -54,7 +59,8 @@ const sendEmail = async (options) => {
 
 const emailOptions = {
   subject: "Email confirmation",
-  to: "jesus_mares_t@hotmail.com",
+  to: "",
+  bcc: "",
   from: process.env.G_USER,
 };
 

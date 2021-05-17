@@ -6,8 +6,8 @@ const {
   create,
   update,
   remove,
-  verifyToken,
 } = require("../controllers/users.controller");
+const { verifyToken } = require("../middlewares/auth.middlewares");
 
 const route = Router();
 
@@ -20,3 +20,5 @@ route.put("/users/:id", verifyToken, update); //UPDATE
 route.delete("/users/:id", verifyToken, remove); //DELETE
 
 module.exports = route;
+
+

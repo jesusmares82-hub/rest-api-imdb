@@ -1,5 +1,6 @@
 const multer = require("multer");
 const mimetype = require("mime-types");
+const { verifyToken } = require("../middlewares/auth.middlewares");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -19,7 +20,6 @@ const {
   update,
   updateProfilePhoto,
   remove,
-  verifyToken,
 } = require("../controllers/directors.controller");
 require;
 

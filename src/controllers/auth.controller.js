@@ -38,6 +38,7 @@ const verify = async (req, res, next) => {
 
   req.body.active = true;
   const response = await Users.update(req.body, { where: { id: id } });
+  console.log(response);
 
   res.json("Cuenta confirmada.");
 };

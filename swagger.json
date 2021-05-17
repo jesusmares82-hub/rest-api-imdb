@@ -14,6 +14,7 @@
   "paths": {
     "/actors": {
       "get": {
+        "security": [{ "jwt_token": [] }],
         "description": "Obtener todos los actores de la base de datos",
         "tags": ["Actors"],
         "responses": {
@@ -43,6 +44,7 @@
     },
     "/directors": {
       "get": {
+        "security": [{ "jwt_token": [] }],
         "description": "Obtener todos los directores de la base de datos",
         "tags": ["Directors"],
         "responses": {
@@ -72,6 +74,7 @@
     },
     "/users": {
       "get": {
+        "security": [{ "jwt_token": [] }],
         "description": "Obtener todos los usuarios de la base de datos",
         "tags": ["Users"],
         "responses": {
@@ -188,6 +191,13 @@
             "type": "boolean"
           }
         }
+      }
+    },
+    "securitySchemes": {
+      "jwt_token": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
       }
     }
   }

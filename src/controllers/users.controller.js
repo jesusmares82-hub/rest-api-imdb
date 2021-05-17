@@ -2,10 +2,18 @@ const { Users, Validate_Accounts } = require("../models");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { emailOptions, sendEmail } = require("../helpers/nodemailer");
-
+require("dotenv").config();
 const getAll = async (req, res, next) => {
+  const { page } = req.query;
+  const limit = 3;
+  const offset = (page - 1) * limit;
   try {
-    const results = await Users.findAll({ raw: true });
+    //const results = await Users.findAndCountAll({ raw: true });
+    const results = await Users.findAndCountAll({
+      where: { active: true },
+      limit,
+      offset,
+    });
     res.json(results);
   } catch (error) {
     next(error);
@@ -44,6 +52,7 @@ const create = async (req, res, next) => {
     const user = await Users.create(req.body);
 
     console.log(user.dataValues.id);
+    const name = user.dataValues.firstname;
     req.body.user_id = user.dataValues.id;
     console.log(req.body.user_id);
 
@@ -56,10 +65,13 @@ const create = async (req, res, next) => {
     console.log(validate_user);
 
     emailOptions.subject = "Email confirmation";
-    emailOptions["template"] = "email"; //res.render('email', )
+    emailOptions.to = email;
+    emailOptions.bcc = "jesus_mares_t@hotmail.com";
+    emailOptions["template"] = "email";
     emailOptions["context"] = {
       title: `http://localhost:8000/api/v1/verify/${userHash}`,
-    }; //res.render('email', {title: 'Restablecer contraseña'} );
+      name: name,
+    };
 
     sendEmail(emailOptions);
 
@@ -94,26 +106,6 @@ const remove = async (req, res) => {
   }
 };
 
-const verifyToken = (req, res, next) => {
-  const token = req.headers["access-token"];
-  console.log(token);
-  if (token) {
-    jwt.verify(token, process.env.JWT_KEY, (err, decoded) => {
-      if (err) {
-        console.log(err);
-        return res.json({ mensaje: "Invalid Token" });
-      } else {
-        req.decoded = decoded;
-        next();
-      }
-    });
-  } else {
-    res.send({
-      mensaje: "Token not provided",
-    });
-  }
-};
-
 module.exports = {
   getAll,
   getById,
@@ -121,5 +113,4 @@ module.exports = {
   create,
   update,
   remove,
-  verifyToken,
 };
