@@ -1,18 +1,8 @@
 const multer = require("multer");
-const mimetype = require("mime-types");
+const { storage } = require("../helpers/multer");
+const mystorage = storage("./uploads/directors");
 const { verifyToken } = require("../middlewares/auth.middlewares");
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "./uploads/directors");
-  },
-  filename: (req, file, cb) => {
-    const ext = mimetype.extension(file.mimetype);
-    cb(null, `${file.fieldname}${Date.now()}.${ext}`);
-  },
-});
-const upload = multer({ storage: storage });
-
+const upload = multer({ storage: mystorage });
 const { Router } = require("express");
 const {
   getAll,

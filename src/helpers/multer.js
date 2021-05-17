@@ -2,8 +2,7 @@ const multer = require("multer");
 const mimetype = require("mime-types");
 
 const storage = (path) => {
-  console.log(path);
-  multer.diskStorage({
+  return multer.diskStorage({
     destination: (req, file, cb) => {
       cb(null, path);
     },

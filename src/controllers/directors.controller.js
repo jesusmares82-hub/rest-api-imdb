@@ -31,15 +31,11 @@ const update = async (req, res) => {
 
 const updateProfilePhoto = async (req, res) => {
   try {
-    console.log(req.params);
     const id = req.params.id;
     const director = await Directors.findOne({ where: { id: id } });
-    console.log(director.dataValues.profile_photo);
     req.body.profile_photo = req.file.path;
-    console.log(req.file);
     const response = await Directors.update(req.body, { where: { id: id } });
-    console.log(response);
-    res.send(req.file);
+    res.send("Photo Profile Updated.");
   } catch (error) {
     res.status(400).json({ message: error.message });
   }

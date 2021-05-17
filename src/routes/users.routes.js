@@ -13,12 +13,10 @@ const route = Router();
 
 //Endpoints
 route.get("/users", verifyToken, getAll); //READ
-route.get("/users/:id", getById); //READ ID
+route.get("/users/:id", verifyToken, getById); //READ ID
 route.get("/users/:email", verifyToken, get); //READ ByEmail
 route.post("/users", create); //CREATE Registro de usuario
 route.put("/users/:id", verifyToken, update); //UPDATE
 route.delete("/users/:id", verifyToken, remove); //DELETE
 
 module.exports = route;
-
-

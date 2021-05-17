@@ -36,15 +36,11 @@ const update = async (req, res, next) => {
 
 const updateProfilePhoto = async (req, res) => {
   try {
-    console.log(req.params);
     const id = req.params.id;
     const actor = await Actors.findOne({ where: { id: id } });
-    console.log(actor.dataValues);
     req.body.profile_photo = req.file.path;
-    console.log(req.file);
     const response = await Actors.update(req.body, { where: { id: id } });
-    console.log(response);
-    res.send(actor.dataValues);
+    res.send("Photo Profile Updated.");
   } catch (error) {
     res.status(400).json({ message: error.message });
   }

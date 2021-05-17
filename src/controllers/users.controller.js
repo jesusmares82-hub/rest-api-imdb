@@ -1,20 +1,49 @@
 const { Users, Validate_Accounts } = require("../models");
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
 const { emailOptions, sendEmail } = require("../helpers/nodemailer");
 require("dotenv").config();
 const getAll = async (req, res, next) => {
-  const { page } = req.query;
+  const page = parseInt(req.query.page);
   const limit = 3;
+  const startIndex = (page - 1) * limit;
+  const endIndex = page * limit;
   const offset = (page - 1) * limit;
+
+  const links = {};
+  const result = {};
+
   try {
-    //const results = await Users.findAndCountAll({ raw: true });
-    const results = await Users.findAndCountAll({
+    const resul = await Users.findAndCountAll({
       where: { active: true },
       limit,
       offset,
     });
-    res.json(results);
+    console.log(endIndex);
+    if (endIndex < resul.count) {
+      links.next = {
+        page: `http://localhost:8000/api/v1/users?page=${page + 1}`,
+        limit: limit,
+      };
+    }
+
+    if (startIndex > 0) {
+      links.previous = {
+        page: `http://localhost:8000/api/v1/users?page=${page - 1}`,
+        limit: limit,
+      };
+    }
+
+    links.base = {
+      page: `http://localhost:8000/api/v1/users?page=${page}`,
+      limit: limit,
+    };
+    result._links = links;
+    result.size = limit;
+    result.start = offset;
+    result.results = resul;
+    console.log(result);
+    next();
+    res.json(result);
   } catch (error) {
     next(error);
   }
